@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import division, print_function, unicode_literals
 __doc__="""
-A tool for comparing two fonts.
+A tool for comparing two fonts. UI version.
 """
 import sys, os, inspect
 import copycat
