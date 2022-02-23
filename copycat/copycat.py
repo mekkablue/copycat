@@ -21,14 +21,14 @@ class BaseTestClass:
 		for master in self.font1.masters:
 			if master.name == masterName1:
 				master_id_1 = master.id
-		assert master_id_1 is not None, f"{master_id_1}"
+		assert master_id_1 is not None, str(master_id_1)
 
 		master_id_2 = None
 		for master in self.font2.masters:
 			if master.name == masterName2:
 				master_id_2 = master.id
 		
-		assert master_id_2 is not None, f"{master_id_2}"
+		assert master_id_2 is not None, str(master_id_2)
 		
 		for glyph1 in self.font1.glyphs:
 			if glyph1 is None: continue
@@ -167,8 +167,9 @@ def main():
 	# testCase
 	resultParser = PrintOneLinerResultParser(profileName="simple")
 	fonts = Glyphs.fonts
-	masterName = "Condensed Thin"
-	resultParser.make_font_to_font_test(fonts[0], fonts[1], masterName, masterName, collectDescriptions=False, collectDocumentation=False)
+	masterName = "Medium"
+	
+	resultParser.make_font_to_font_test(fonts[0], fonts[1], masterName, masterName, collectDescriptions=True, collectDocumentation=True)
 
 
 if __name__ == '__main__':
