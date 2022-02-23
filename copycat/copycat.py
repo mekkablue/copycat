@@ -34,13 +34,13 @@ class BaseTestClass:
 			if glyph1 is None: continue
 			layer1 = glyph1.layers[master_id_1]
 			if layer1 is None: continue
+			glyph2 = self.font2.glyphForUnicode_(glyph1.unicode)
 			
-			for glyph2 in self.font2.glyphs:
-				if glyph2 is None: continue
-				layer2 = glyph2.layers[master_id_2]
-				if layer2 is None: continue
+			if glyph2 is None: continue
+			layer2 = glyph2.layers[master_id_2]
+			if layer2 is None: continue
 				
-				results += self._parseTestMethods("layer__", collectDescriptions, collectDocumentation, **dict(layer1=layer1, layer2=layer2))
+			results += self._parseTestMethods("layer__", collectDescriptions, collectDocumentation, **dict(layer1=layer1, layer2=layer2))
 				
 				
 		return results
