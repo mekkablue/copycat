@@ -150,21 +150,16 @@ class PrintOneLinerResultParser(ResultParser):
 		for testResult in results:
 			method_name = testResult.get('method_name')
 			
-			glyph1_name = testResult.get("glyph 1 name/layer1 name")
-			glyph2_name = testResult.get("glyph 2 name/layer2 name")
-			font1_name = testResult.get("font1 file name")
-			font2_name = testResult.get("font1 file name")
+			name1 = testResult.get("name1")
+			name2 = testResult.get("name2")
 			boolResult = testResult.get('boolResult')
 			
 			txt = f"> Method: {method_name}, returns: {boolResult}"
-			if glyph1_name is not None:
-				txt += f", glyph1: {glyph1_name}"
-			if glyph2_name is not None:
-				txt += f", glyph2: {glyph2_name}"
-			if font1_name is not None:
-				txt += f", font1: {font1_name}"
-			if font2_name is not None:
-				txt += f", font2: {font2_name}"
+			if name1 is not None:
+				txt += f", name1: {name1}"
+			if name2 is not None:
+				txt += f", name2: {name2}"
+
 			print(txt)
 			
 

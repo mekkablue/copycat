@@ -58,8 +58,8 @@ number"""
 		
 		result_dictionary = {
 					"boolResult":boolResult, 
-					"glyph 1 name/layer1 name":(layer1.parent.name, layer1.name), 
-					"glyph 2 name/layer2 name":(layer2.parent.name, layer2.name), 
+					"name1":layer1.parent.name, 
+					"name2":layer2.parent.name, 
 					"difference_in_point_count":abs(layer_point_count_layer1-layer_point_count_layer2)	
 				}
 		
@@ -114,8 +114,8 @@ within threshold"""
 		
 		result_dictionary = {
 					"boolResult":boolResult, 
-					"glyph 1 name/layer1 name":(layer1.parent.name, layer1.name), 
-					"glyph 2 name/layer2 name":(layer2.parent.name, layer2.name), 
+					"name1":(layer1.parent.name, layer1.name), 
+					"name2":(layer2.parent.name, layer2.name), 
 					"difference in point count":difference_in_point_count	
 				}
 		if difference_in_point_count:
@@ -133,8 +133,8 @@ within threshold"""
 		font2_glyphs_count = len([g for g in font2.glyphs if g is not None])
 
 		return {"boolResult":font1_glyphs_count==font2_glyphs_count, 
-				"font1 file name":os.path.basename(font1.filepath),
-				"font2 file name":os.path.basename(font2.filepath),
+				"name1":os.path.basename(font1.filepath),
+				"name2":os.path.basename(font2.filepath),
 				"font1 glyphs count":font1_glyphs_count,
 				"font2 glyphs count":font2_glyphs_count,
 				"glyphs count difference":abs(font1_glyphs_count-font2_glyphs_count),

@@ -44,8 +44,8 @@ documentation text"""
 
 		return {
 					"boolResult":True, 
-					"glyph 1 name/layer1 name":(layer1.parent.name, layer1.name), 
-					"glyph 2 name/layer2 name":(layer2.parent.name, layer2.name), 
+					"name1":(layer1.parent.name, layer1.name), 
+					"name2":(layer2.parent.name, layer2.name), 
 				}
 
 	
@@ -56,6 +56,6 @@ documentation text"""
 
 		return {
 					"boolResult":True, 
-					"font1 file name":os.path.basename(font1.filepath),
-					"font2 file name":os.path.basename(font2.filepath),
+					"name1":os.path.basename(font1.filepath),
+					"name2":os.path.basename(font2.filepath),
 				}
