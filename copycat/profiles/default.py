@@ -114,8 +114,8 @@ within threshold"""
 		
 		result_dictionary = {
 					"boolResult":boolResult, 
-					"name1":(layer1.parent.name, layer1.name), 
-					"name2":(layer2.parent.name, layer2.name), 
+					"name1":layer1.parent.name, 
+					"name2":layer2.parent.name, 
 					"difference in point count":difference_in_point_count	
 				}
 		if difference_in_point_count:

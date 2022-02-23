@@ -49,9 +49,8 @@ class CopyCatUI:
 		y = splitHeight
 		self.w.font1Title = vl.TextBox((x,y,-10,txtH), "select font 1:")
 		y += txtH + p
-		self.w.font1PopUp = vl.PopUpButton((x,y,200,btnH), list(self.fontsDict.keys()), callback=self.fontChanged)
+		self.w.font1PopUp = vl.PopUpButton((x,y,200,btnH), list(self.fontsDict.keys()), callback=self.font1Changed)
 		self.w.font1PopUp.set(0)
-		self.w.font1PopUp.number = 1
 		y += btnH + p
 		self.w.master1PopUp = vl.PopUpButton((x,y,200,btnH),[])
 		
@@ -59,9 +58,8 @@ class CopyCatUI:
 		x = 220
 		self.w.font2Title = vl.TextBox((x,y,-10,txtH), "select font 2:")
 		y += txtH + p
-		self.w.font2PopUp = vl.PopUpButton((x,y,200,btnH), list(self.fontsDict.keys()), callback=self.fontChanged)
+		self.w.font2PopUp = vl.PopUpButton((x,y,200,btnH), list(self.fontsDict.keys()), callback=self.font2Changed)
 		self.w.font2PopUp.set(1)
-		self.w.font2PopUp.number = 2
 		y += btnH + p
 		self.w.master2PopUp = vl.PopUpButton((x,y,200,btnH),[])
 
@@ -70,32 +68,50 @@ class CopyCatUI:
 		self.w.applyButton = vl.Button((x,y,100,btnH),"parse", callback=self.apply)
 
 		self.w.open()
-		self.fontChanged(self.w.font1PopUp)
-		self.fontChanged(self.w.font2PopUp)
+		self.font1Changed(self.w.font1PopUp)
+		self.font2Changed(self.w.font2PopUp)
 
 	def apply(self, sender):
 		Glyphs.clearLog()
 		Glyphs.showMacroWindow()
-		ResultParser = self.parserDict[self.w.parser.getItem()]
+		parserName = self.w.parser.getItem()
+		ResultParser = self.parserDict[parserName]
 		profileName = self.w.profile.getItem()
 		resultParser = ResultParser(profileName=profileName)
-
+		print()
+		print("*"*20)
+		print("*"*20)
+		print(f"\tParser: {parserName}ResultParser, \n\tprofile: {profileName}, \n\t\tfont1: {self.font1},\n\t\tfont2: {self.font2}")
+		print("*"*20)
+		print("*"*20)
+		print()
 		masterName1 = self.w.master1PopUp.getItem()
 		masterName2 = self.w.master2PopUp.getItem()
 		
 		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, collectDescriptions=True, collectDocumentation=True)
 
-	def fontChanged(self, sender):
+	def font1Changed(self, sender):
+		self.fontChanged(sender, 1)
+
+	def font2Changed(self, sender):
+		self.fontChanged(sender, 2)
+
+	def fontChanged(self, sender, fontNo):
 		fontBaseName = self.w.font1PopUp.getItem()
+		masterPopUp = self.w.master1PopUp
+		if fontNo == 2:
+			fontBaseName = self.w.font2PopUp.getItem()
+			masterPopUp = self.w.master2PopUp
+
 		fontObj = self.fontsDict[fontBaseName]
 		masterNames = [master.name for master in fontObj.masters]
-		if sender.number == 1:
-			self.font1 = fontObj
-			masterPopUp = self.w.master1PopUp
-		if sender.number == 2:
-			self.font2 = fontObj
-			masterPopUp = self.w.master2PopUp
 		masterPopUp.setItems(masterNames)
+
+		if fontNo == 1:
+			self.font1 = fontObj
+		if fontNo == 2:
+			self.font2 = fontObj
+
 def main():
 	CopyCatUI()
 

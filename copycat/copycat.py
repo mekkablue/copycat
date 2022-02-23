@@ -154,11 +154,12 @@ class PrintOneLinerResultParser(ResultParser):
 			name2 = testResult.get("name2")
 			boolResult = testResult.get('boolResult')
 			
-			txt = f"> Method: {method_name}, returns: {boolResult}"
+			txt = f"> Method: {method_name}"
 			if name1 is not None:
 				txt += f", name1: {name1}"
 			if name2 is not None:
 				txt += f", name2: {name2}"
+			txt += f", returns: {boolResult}"
 
 			print(txt)
 			
