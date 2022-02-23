@@ -142,11 +142,35 @@ class PrintResultParser(ResultParser):
 				print(f"\t - {key}: {value}")
 			print()
 
-
+class PrintOneLinerResultParser(ResultParser):
+	def __init__(self, profileName="default"):
+		super().__init__(profileName)
+	
+	def presentResults(self, results):
+		for testResult in results:
+			method_name = testResult.get('method_name')
+			
+			glyph1_name = testResult.get("glyph 1 name/layer1 name")
+			glyph2_name = testResult.get("glyph 2 name/layer2 name")
+			font1_name = testResult.get("font1 file name")
+			font2_name = testResult.get("font1 file name")
+			boolResult = testResult.get('boolResult')
+			
+			txt = f"> Method: {method_name}, returns: {boolResult}"
+			if glyph1_name is not None:
+				txt += f", glyph1: {glyph1_name}"
+			if glyph2_name is not None:
+				txt += f", glyph2: {glyph2_name}"
+			if font1_name is not None:
+				txt += f", font1: {font1_name}"
+			if font2_name is not None:
+				txt += f", font2: {font2_name}"
+			print(txt)
+			
 
 def main():
 	# testCase
-	resultParser = PrintResultParser(profileName="simple")
+	resultParser = PrintOneLinerResultParser(profileName="simple")
 	fonts = Glyphs.fonts
 	masterName = "Condensed Thin"
 	resultParser.make_font_to_font_test(fonts[0], fonts[1], masterName, masterName, collectDescriptions=False, collectDocumentation=False)
