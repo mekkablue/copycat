@@ -1,6 +1,7 @@
 # project specific
 shapes.py
 copycat/profiles/shapes.py
+__test__.py
 
 # General
 .DS_Store
