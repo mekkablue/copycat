@@ -14,9 +14,9 @@ class BaseTestClass:
 		self.font1 = font1
 		self.font2 = font2
 
-	def make_font_to_font_test(self, masterName1, masterName2, collectDescriptions=True, collectDocumentation=True):
+	def make_font_to_font_test(self, masterName1, masterName2, returnDetails=True, returnDocString=True):
 		
-		results = self._parseTestMethods("font__", collectDescriptions, collectDocumentation, **dict(font1=self.font1, font2=self.font2))
+		results = self._parseTestMethods("font__", returnDetails, returnDocString, **dict(font1=self.font1, font2=self.font2))
 		master_id_1 = None
 		for master in self.font1.masters:
 			if master.name == masterName1:
@@ -40,20 +40,20 @@ class BaseTestClass:
 			layer2 = glyph2.layers[master_id_2]
 			if layer2 is None: continue
 				
-			results += self._parseTestMethods("layer__", collectDescriptions, collectDocumentation, **dict(layer1=layer1, layer2=layer2))
+			results += self._parseTestMethods("layer__", returnDetails, returnDocString, **dict(layer1=layer1, layer2=layer2))
 				
 				
 		return results
 
 
-	def parseLayerTestMethodsOnSpecificLayers(self, collectDescriptions, collectDocumentation, layer1, layer2):
-		self._parseTestMethods("layer__", collectDescriptions, collectDocumentation, **dict(layer1=layer1, layer2=layer2))
+	def parseLayerTestMethodsOnSpecificLayers(self, returnDetails, returnDocString, layer1, layer2):
+		self._parseTestMethods("layer__", returnDetails, returnDocString, **dict(layer1=layer1, layer2=layer2))
 		
 
-	def parseFontTestMethods(self, collectDescriptions, collectDocumentation, font1, font2):
-		self._parseTestMethods("font__", collectDescriptions, collectDocumentation, **dict(font1=font1, font2=font2))
+	def parseFontTestMethods(self, returnDetails, returnDocString, font1, font2):
+		self._parseTestMethods("font__", returnDetails, returnDocString, **dict(font1=font1, font2=font2))
 
-	def _parseTestMethods(self, prefix, collectDescriptions, collectDocumentation, **kwargs):
+	def _parseTestMethods(self, prefix, returnDetails, returnDocString, **kwargs):
 		method_list = [func for func in dir(self) if callable(getattr(self, func))]
 
 		resultList = []
@@ -82,11 +82,11 @@ class BaseTestClass:
 
 				testResult = OrderedDict([("method_name", method_name),("boolResult", boolResult)])	
 
-				if collectDescriptions:
+				if returnDetails:
 					for k in sorted(list(resultData.keys())):
 						if k == "boolResult": continue
 						testResult[k] = resultData[k]
-				if collectDocumentation:
+				if returnDocString:
 					testResult["__doc__"] = method.__doc__
 
 				resultList.append(testResult)
@@ -97,9 +97,9 @@ class ResultParser:
 		profileMod = self.getProfileMod(profileName)
 		self.testCase = profileMod.TestCase()
 	
-	def make_font_to_font_test(self, font1, font2, masterName1, masterName2, collectDescriptions=True, collectDocumentation=True):
+	def make_font_to_font_test(self, font1, font2, masterName1, masterName2, returnDetails=True, returnDocString=True):
 		self.testCase.setFonts(font1, font2)
-		results = self.testCase.make_font_to_font_test(masterName1, masterName2, collectDescriptions, collectDocumentation)
+		results = self.testCase.make_font_to_font_test(masterName1, masterName2, returnDetails, returnDocString)
 		self.presentResults(results)
 
 	def presentResults(self, results):
@@ -170,7 +170,7 @@ def main():
 	fonts = Glyphs.fonts
 	masterName = "Medium"
 	
-	resultParser.make_font_to_font_test(fonts[0], fonts[1], masterName, masterName, collectDescriptions=True, collectDocumentation=True)
+	resultParser.make_font_to_font_test(fonts[0], fonts[1], masterName, masterName, returnDetails=True, returnDocString=True)
 
 
 if __name__ == '__main__':
