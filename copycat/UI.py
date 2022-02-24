@@ -4,17 +4,35 @@ from __future__ import division, print_function, unicode_literals
 __doc__="""
 A tool for comparing two fonts. UI version.
 """
-import sys, os, inspect
+
 import copycat
 import vanilla as vl
+import sys, inspect, os, importlib
+
+def getParsersMod():
+    parserPath = "./parsers"
+    parserDict = {}
+    for parserName in os.listdir(parserPath):
+        
+        if not parserName.endswith("ResultParser.py"): continue
+        parserName = parserName[:-3]
+        assert os.path.exists(os.path.abspath(os.path.join(parserPath, parserName + ".py"))), \
+                                                                    f"parser file for {parserName} doesn't exists"
+        absParserPath = os.path.abspath(parserPath)
+        if absParserPath not in sys.path:
+            sys.path.append(absParserPath)
+        parserDict[parserName] = importlib.import_module(parserName)
+    return parserDict
 
 def getParserDict():
-	parserNameToClass = {}
-	for name, obj in inspect.getmembers(sys.modules["copycat"]):
-		if inspect.isclass(obj):
-			if obj.__name__.endswith("ResultParser") and obj.__name__ != "ResultParser":
-				parserNameToClass[obj.__name__.replace("ResultParser","")] = obj
-	return parserNameToClass
+    parserNameToClass = {}
+    for k, v in getParsersMod().items():
+        for name, obj in inspect.getmembers(sys.modules[k]):
+            if name == "BaseResultParser":continue
+            if inspect.isclass(obj):
+                if obj.__name__.endswith("ResultParser") and obj.__name__ != "ResultParser":
+                    parserNameToClass[obj.__name__.replace("ResultParser","")] = obj
+    return parserNameToClass
 
 def getProfileNames():
 	profilePath = "./profiles"
