@@ -1,3 +1,7 @@
+# project specific
+shapes.py
+copycat/profiles/shapes.py
+
 # General
 .DS_Store
 .AppleDouble
