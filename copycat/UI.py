@@ -20,7 +20,51 @@ def getProfileNames():
 	profilePath = "./profiles"
 	return [p[:-3] for p in os.listdir(profilePath) if p.endswith(".py")]
 
+def characterToGlyphName(c, cmap):
+	v = ord(c)
+	v = cmap.get(v)
+	if isinstance(v, list):
+		v = v[0]
+	return v
 
+
+def splitText(text, cmap, fallback=".notdef"):
+	# method from defconAppKit
+	text = text.replace("//", "/slash ")
+	#
+	glyphNames = []
+	compileStack = None
+	for c in text:
+		# start a glyph name compile.
+		if c == "/":
+			# finishing a previous compile.
+			if compileStack is not None:
+				# only add the compile if something has been added to the stack.
+				if compileStack:
+					glyphNames.append("".join(compileStack))
+			# reset the stack.
+			compileStack = []
+		# adding to or ending a glyph name compile.
+		elif compileStack is not None:
+			# space. conclude the glyph name compile.
+			if c == " ":
+				# only add the compile if something has been added to the stack.
+				if compileStack:
+					glyphNames.append("".join(compileStack))
+				compileStack = None
+			# add the character to the stack.
+			else:
+				compileStack.append(c)
+		# adding a character that needs to be converted to a glyph name.
+		else:
+			glyphName = characterToGlyphName(c, cmap)
+			if glyphName is None:
+				glyphName = fallback
+			glyphNames.append(glyphName)
+	# catch remaining compile.
+	if compileStack is not None and compileStack:
+		glyphNames.append("".join(compileStack))
+	return glyphNames
 
 
 class CopyCatUI:
@@ -35,19 +79,19 @@ class CopyCatUI:
 
 
 		self.w = vl.Window((200,200,430,240))
-		self.w.parserTitle = vl.TextBox((x,y,200,txtH), "select parser:")
+		self.w.parserTitle = vl.TextBox((x,y,200,txtH), "Select parser:")
 		y += txtH + p
 		self.w.parser = vl.PopUpButton((x,y,200,btnH), list(self.parserDict.keys()))
 
 		y += txtH + p
-		self.w.profileTitle = vl.TextBox((x,y,200,txtH), "select profile:")
+		self.w.profileTitle = vl.TextBox((x,y,200,txtH), "Select profile:")
 		y += txtH + p
 		self.w.profile = vl.PopUpButton((x,y,200,btnH), profileNames)
 
 		splitHeight = btnH + p + y
 		
 		y = splitHeight
-		self.w.font1Title = vl.TextBox((x,y,-10,txtH), "select font 1:")
+		self.w.font1Title = vl.TextBox((x,y,-10,txtH), "Select font 1:")
 		y += txtH + p
 		self.w.font1PopUp = vl.PopUpButton((x,y,200,btnH), list(self.fontsDict.keys()), callback=self.font1Changed)
 		self.w.font1PopUp.set(0)
@@ -56,7 +100,7 @@ class CopyCatUI:
 		
 		y = splitHeight
 		x = 220
-		self.w.font2Title = vl.TextBox((x,y,-10,txtH), "select font 2:")
+		self.w.font2Title = vl.TextBox((x,y,-10,txtH), "Select font 2:")
 		y += txtH + p
 		self.w.font2PopUp = vl.PopUpButton((x,y,200,btnH), list(self.fontsDict.keys()), callback=self.font2Changed)
 		self.w.font2PopUp.set(1)
@@ -65,11 +109,18 @@ class CopyCatUI:
 
 		y += btnH + p
 		x = 10
-		self.w.showDocString = vl.CheckBox((x,y,-p,btnH),"Show method description")
+		self.w.showDocString = vl.CheckBox((x,y,-p,txtH),"Show method description")
+		y += txtH + p
+		self.w.showDetails = vl.CheckBox((x,y,-p,txtH),"Show detailed output")
 		y += btnH + p
-		self.w.showDetails = vl.CheckBox((x,y,-p,btnH),"Show detailed output")
-		y += btnH + p
-		self.w.applyButton = vl.Button((x,y,100,btnH),"parse", callback=self.apply)
+
+		self.w.excludeGlyphsTitle = vl.TextBox((x,y,-p,txtH),"Exclude glyphs:")
+		y += txtH + p
+
+		self.w.excludeGlyphs = vl.EditText((x,y,200,btnH*5),"I l /bar /brokenbar /space")
+		y += btnH*5 + p
+
+		self.w.applyButton = vl.Button((-x-100,y,100,txtH),"Parse", callback=self.apply)
 		y += btnH + p
 		h = y
 		x,y,w,_ = self.w.getPosSize()
@@ -97,7 +148,9 @@ class CopyCatUI:
 		masterName1 = self.w.master1PopUp.getItem()
 		masterName2 = self.w.master2PopUp.getItem()
 		
-		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, returnDetails=returnDetails, returnDocString=returnDocString)
+		cmap = {int("0x"+glyph.unicode, 0):glyph.name for glyph in self.font1.glyphs if glyph.unicode is not None}
+		excludeGlyphs = splitText(self.w.excludeGlyphs.get(), cmap)
+		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, returnDetails=returnDetails, returnDocString=returnDocString, excludeGlyphs=excludeGlyphs)
 
 	def font1Changed(self, sender):
 		self.fontChanged(sender, 1)
