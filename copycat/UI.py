@@ -97,7 +97,7 @@ class CopyCatUI:
 		masterName1 = self.w.master1PopUp.getItem()
 		masterName2 = self.w.master2PopUp.getItem()
 		
-		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, collectDescriptions=returnDetails, returnDocString=returnDocString)
+		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, returnDetails=returnDetails, returnDocString=returnDocString)
 
 	def font1Changed(self, sender):
 		self.fontChanged(sender, 1)
