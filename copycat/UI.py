@@ -65,8 +65,15 @@ class CopyCatUI:
 
 		y += btnH + p
 		x = 10
+		self.w.showDocString = vl.CheckBox((x,y,-p,btnH),"Show method description")
+		y += btnH + p
+		self.w.showDetails = vl.CheckBox((x,y,-p,btnH),"Show detailed output")
+		y += btnH + p
 		self.w.applyButton = vl.Button((x,y,100,btnH),"parse", callback=self.apply)
-
+		y += btnH + p
+		h = y
+		x,y,w,_ = self.w.getPosSize()
+		self.w.setPosSize((x,y,w,h))
 		self.w.open()
 		self.font1Changed(self.w.font1PopUp)
 		self.font2Changed(self.w.font2PopUp)
@@ -74,6 +81,8 @@ class CopyCatUI:
 	def apply(self, sender):
 		Glyphs.clearLog()
 		Glyphs.showMacroWindow()
+		returnDetails = True if self.w.showDetails.get() == 1 else False
+		returnDocString = True if self.w.showDocString.get() == 1 else False
 		parserName = self.w.parser.getItem()
 		ResultParser = self.parserDict[parserName]
 		profileName = self.w.profile.getItem()
@@ -88,7 +97,7 @@ class CopyCatUI:
 		masterName1 = self.w.master1PopUp.getItem()
 		masterName2 = self.w.master2PopUp.getItem()
 		
-		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, collectDescriptions=True, collectDocumentation=True)
+		resultParser.make_font_to_font_test(self.font1, self.font2, masterName1, masterName2, collectDescriptions=returnDetails, returnDocString=returnDocString)
 
 	def font1Changed(self, sender):
 		self.fontChanged(sender, 1)
