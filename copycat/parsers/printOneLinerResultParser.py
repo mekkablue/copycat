@@ -12,12 +12,13 @@ class PrintOneLinerResultParser(BaseResultParser):
 			name1 = testResult.get("name1")
 			name2 = testResult.get("name2")
 			boolResult = testResult.get('boolResult')
+			emojiResult = "✅" if boolResult else "❌"
 			
-			txt = f"> Test {method_name}"
-			if name1 is not None:
-				txt += f", name1: {name1}"
-			if name2 is not None:
-				txt += f", name2: {name2}"
-			txt += f", returns: {boolResult}"
+			txt = f"{emojiResult} {method_name}"
+			if name1:
+				txt += f", 1: {name1}"
+			if name2:
+				txt += f", 2: {name2}"
+			txt += f": {boolResult}"
 
 			print(txt)
