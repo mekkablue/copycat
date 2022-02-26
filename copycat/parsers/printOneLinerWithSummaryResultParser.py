@@ -1,4 +1,5 @@
 from printOneLinerResultParser import PrintOneLinerResultParser
+from collections import OrderedDict
 
 class PrintOneLinerWithSummaryResultParser(PrintOneLinerResultParser):
 	def __init__(self, profileName="default"):
