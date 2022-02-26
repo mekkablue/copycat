@@ -8,19 +8,19 @@ class PrintOneLinerWithSummaryResultParser(PrintOneLinerResultParser):
 	def presentResults(self, results):
 		super().presentResults(results)
 		line = "\n" + "*"*20 + "\n"
-		print(f"\n\n{line}SUMMARY{line}\n\n")
+		print(f"\n\n{line}SUMMARY{line}\n")
 
 
 		summaryDict = OrderedDict()
 		for testResult in results:
 			method_name = testResult.get('method_name')
 			method_name = self.getNiceMethodName(method_name)
-			title = f"# {method_name}"
+			title = f"\n# {method_name}"
 			doc = testResult.get('__doc__')
 			boolResult = testResult.get('boolResult')
 			if doc is not None:
 				doc = doc.replace("\n","\n#\t")
-				title += f"\ndescription:\n\n{doc}\n"
+				title += f"\n{doc}\n"
 			
 			if title not in summaryDict.keys():
 				summaryDict[title] = []
