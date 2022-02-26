@@ -127,15 +127,15 @@ class CopyCatUI:
 
 		y += btnH + p
 		x = 10
-		self.w.showDocString = vl.CheckBox((x,y,-p,txtH),"Show method description")
+		self.w.showDocString = vl.CheckBox((x,y,-p,txtH),"Show method description", value=True)
 		y += txtH + p
-		self.w.showDetails = vl.CheckBox((x,y,-p,txtH),"Show detailed output")
+		self.w.showDetails = vl.CheckBox((x,y,-p,txtH),"Show detailed output", value=True)
 		y += btnH + p
 
 		self.w.excludeGlyphsTitle = vl.TextBox((x,y,-p,txtH),"Exclude glyphs:")
 		y += txtH + p
 
-		self.w.excludeGlyphs = vl.EditText((x,y,200,btnH*5),"I l /bar /brokenbar /space")
+		self.w.excludeGlyphs = vl.EditText((x,y,-x,btnH*5),"I l /bar /brokenbar /space /nbspace")
 		y += btnH*5 + p
 
 		self.w.applyButton = vl.Button((-x-100,y,100,txtH),"Parse", callback=self.apply)
